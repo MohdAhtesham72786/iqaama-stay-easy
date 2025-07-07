@@ -1,10 +1,12 @@
 
-import React from 'react';
-import { MapPin, Bed, Bath, Square, Heart, MessageCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { MapPin, Bed, Bath, Square, Heart, MessageCircle, Phone, Eye } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 
 const FeaturedProperties = () => {
+  const [likedProperties, setLikedProperties] = useState(new Set());
+
   const properties = [
     {
       id: 1,
@@ -18,7 +20,9 @@ const FeaturedProperties = () => {
       area: "650 sq ft",
       image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       features: ["Furnished", "Balcony", "Gym Access"],
-      verified: true
+      verified: true,
+      contact: "+971 50 123 4567",
+      landlord: "Ahmed Al Mansouri"
     },
     {
       id: 2,
@@ -32,7 +36,9 @@ const FeaturedProperties = () => {
       area: "Private bed",
       image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       features: ["WiFi Included", "AC", "Near Metro"],
-      verified: true
+      verified: true,
+      contact: "+971 50 987 6543",
+      landlord: "Fatima Hassan"
     },
     {
       id: 3,
@@ -46,7 +52,9 @@ const FeaturedProperties = () => {
       area: "2,800 sq ft",
       image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       features: ["Garden", "Maid's Room", "Pool Access"],
-      verified: true
+      verified: true,
+      contact: "+971 50 456 7890",
+      landlord: "Sarah Johnson"
     },
     {
       id: 4,
@@ -60,9 +68,37 @@ const FeaturedProperties = () => {
       area: "120 sq ft",
       image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       features: ["Furnished", "WiFi", "Utilities Included"],
-      verified: true
+      verified: true,
+      contact: "+971 50 234 5678",
+      landlord: "Mohammed Ali"
     }
   ];
+
+  const handleLike = (propertyId) => {
+    setLikedProperties(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(propertyId)) {
+        newSet.delete(propertyId);
+      } else {
+        newSet.add(propertyId);
+      }
+      return newSet;
+    });
+  };
+
+  const handleContact = (property, method) => {
+    if (method === 'phone') {
+      window.open(`tel:${property.contact}`, '_self');
+    } else if (method === 'chat') {
+      // In real app, this would open in-app chat
+      alert(`Opening chat with ${property.landlord} for "${property.title}"`);
+    }
+  };
+
+  const handleViewDetails = (property) => {
+    // In real app, this would navigate to property details page
+    alert(`Viewing details for "${property.title}" in ${property.location}`);
+  };
 
   return (
     <section className="py-16 bg-gray-50">
@@ -78,7 +114,7 @@ const FeaturedProperties = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {properties.map((property) => (
-            <Card key={property.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+            <Card key={property.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
               <div className="relative">
                 <img
                   src={property.image}
@@ -96,19 +132,26 @@ const FeaturedProperties = () => {
                       ✓ Verified
                     </span>
                   )}
-                  <Button variant="ghost" size="sm" className="bg-white/80 hover:bg-white">
-                    <Heart className="h-4 w-4" />
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className={`bg-white/80 hover:bg-white transition-colors ${
+                      likedProperties.has(property.id) ? 'text-red-500' : 'text-gray-600'
+                    }`}
+                    onClick={() => handleLike(property.id)}
+                  >
+                    <Heart className={`h-4 w-4 ${likedProperties.has(property.id) ? 'fill-current' : ''}`} />
                   </Button>
                 </div>
               </div>
 
               <div className="p-4">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 hover:text-blue-800 cursor-pointer transition-colors">
                   {property.title}
                 </h3>
                 
                 <div className="flex items-center text-gray-600 mb-3">
-                  <MapPin className="h-4 w-4 mr-1" />
+                  <MapPin className="h-4 w-4 mr-1 text-blue-600" />
                   <span className="text-sm">{property.location}</span>
                 </div>
 
@@ -145,12 +188,33 @@ const FeaturedProperties = () => {
                   ))}
                 </div>
 
+                <div className="text-sm text-gray-600 mb-4">
+                  <span className="font-medium">Landlord:</span> {property.landlord}
+                </div>
+
                 <div className="flex gap-2">
-                  <Button className="flex-1 bg-blue-800 hover:bg-blue-900">
+                  <Button 
+                    className="flex-1 bg-blue-800 hover:bg-blue-900 transition-colors"
+                    onClick={() => handleViewDetails(property)}
+                  >
+                    <Eye className="h-4 w-4 mr-1" />
                     View Details
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleContact(property, 'chat')}
+                    className="hover:bg-blue-50"
+                  >
                     <MessageCircle className="h-4 w-4" />
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleContact(property, 'phone')}
+                    className="hover:bg-green-50"
+                  >
+                    <Phone className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
@@ -159,7 +223,7 @@ const FeaturedProperties = () => {
         </div>
 
         <div className="text-center mt-12">
-          <Button variant="outline" className="px-8 py-3">
+          <Button variant="outline" className="px-8 py-3 hover:bg-blue-50 border-blue-200">
             View All Properties
           </Button>
         </div>
