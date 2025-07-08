@@ -33,8 +33,8 @@ interface GoogleMapComponentProps {
 
 const GoogleMapComponent = ({ properties, onPropertySelect, center }: GoogleMapComponentProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<window.google.maps.Map | null>(null);
-  const markersRef = useRef<window.google.maps.Marker[]>([]);
+  const mapInstanceRef = useRef<google.maps.Map | null>(null);
+  const markersRef = useRef<google.maps.Marker[]>([]);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   
