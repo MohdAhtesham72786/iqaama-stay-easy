@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { MapPin, Bed, Bath, Square, Heart, MessageCircle, Phone, Filter, Navigation, MapIcon, Star, Car, Wifi, Clock, CheckCircle } from 'lucide-react';
 import { Button } from './ui/button';
@@ -54,9 +53,11 @@ const PropertySearchResults = ({ searchCriteria }: { searchCriteria: SearchCrite
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [favorites, setFavorites] = useState<Set<number>>(new Set());
+  const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number }>({ lat: 25.0772, lng: 55.1392 });
 
-  // Extended property data based on Dubai Marina search
+  // Extended property data for different locations
   const allProperties: Property[] = [
+    // Dubai Marina Properties
     {
       id: 1,
       title: "Luxury 1BR Apartment in Dubai Marina with Sea View",
@@ -91,113 +92,185 @@ const PropertySearchResults = ({ searchCriteria }: { searchCriteria: SearchCrite
     },
     {
       id: 2,
-      title: "Modern 2BR Villa in Arabian Ranches with Garden",
-      location: "Arabian Ranches",
-      coordinates: { lat: 25.0512, lng: 55.2601 },
+      title: "Premium 3BR Apartment in Dubai Marina Tower",
+      location: "Dubai Marina",
+      coordinates: { lat: 25.0785, lng: 55.1401 },
       price: "AED 12,000",
       period: "/month",
-      type: "villa",
-      beds: 2,
+      type: "apartment",
+      beds: 3,
       baths: 2,
-      area: "1,800 sq ft",
-      image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      area: "1,400 sq ft",
+      image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       images: [
-        "https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+        "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
       ],
-      features: ["Garden", "Private Parking", "Community Pool", "Pet Friendly"],
+      features: ["Furnished", "Marina View", "Balcony", "Gym", "Pool", "Parking"],
       verified: true,
-      contact: "+971 50 987 6543",
-      nearbyPlaces: ["Arabian Center - 1.5km", "Golf Course - 800m", "School - 1km"],
-      description: "Beautiful 2-bedroom villa with private garden in a family-friendly community.",
+      contact: "+971 50 234 5678",
+      nearbyPlaces: ["Marina Walk - 200m", "Metro Station - 400m", "Beach - 150m"],
+      description: "Spacious 3-bedroom apartment with stunning marina views and modern amenities.",
       landlord: {
         name: "Sarah Johnson",
-        phone: "+971 50 987 6543",
-        whatsapp: "+971 50 987 6543",
-        rating: 4.6
+        phone: "+971 50 234 5678",
+        whatsapp: "+971 50 234 5678",
+        rating: 4.7
       },
-      amenities: ["Community Gym", "Children's Play Area", "BBQ Area", "Tennis Court"],
+      amenities: ["24/7 Security", "Gym", "Pool", "Parking"],
       availability: "Available from Aug 15",
       emirate: "dubai"
     },
     {
       id: 3,
-      title: "Affordable Bedspace in Deira - Near Metro",
-      location: "Deira",
-      coordinates: { lat: 25.2731, lng: 55.3414 },
-      price: "AED 850",
+      title: "Modern 2BR Apartment in Dubai Marina with Parking",
+      location: "Dubai Marina",
+      coordinates: { lat: 25.0765, lng: 55.1385 },
+      price: "AED 9,500",
       period: "/month",
-      type: "bedspace",
-      beds: "Shared",
-      baths: "Shared",
-      area: "Bed + Storage",
+      type: "apartment",
+      beds: 2,
+      baths: 2,
+      area: "1,100 sq ft",
+      image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      images: [
+        "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+      ],
+      features: ["Semi-Furnished", "City View", "Balcony", "Gym", "Pool"],
+      verified: true,
+      contact: "+971 50 345 6789",
+      nearbyPlaces: ["Marina Mall - 400m", "Metro Station - 300m", "Beach - 200m"],
+      description: "Beautiful 2-bedroom apartment with city views and excellent amenities.",
+      landlord: {
+        name: "Mohammed Ali",
+        phone: "+971 50 345 6789",
+        whatsapp: "+971 50 345 6789",
+        rating: 4.5
+      },
+      amenities: ["Security", "Gym", "Pool", "Parking"],
+      availability: "Available Now",
+      emirate: "dubai"
+    },
+    // Abu Dhabi Properties
+    {
+      id: 4,
+      title: "Elegant 3BR Villa in Abu Dhabi with Garden",
+      location: "Abu Dhabi",
+      coordinates: { lat: 24.4539, lng: 54.3773 },
+      price: "AED 15,000",
+      period: "/month",
+      type: "villa",
+      beds: 3,
+      baths: 3,
+      area: "2,200 sq ft",
+      image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      images: [
+        "https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+      ],
+      features: ["Garden", "Private Parking", "Maid Room", "Storage"],
+      verified: true,
+      contact: "+971 50 456 7890",
+      nearbyPlaces: ["Mall - 1.5km", "School - 800m", "Hospital - 2km"],
+      description: "Spacious 3-bedroom villa with private garden in a quiet neighborhood.",
+      landlord: {
+        name: "Fatima Al Zahra",
+        phone: "+971 50 456 7890",
+        whatsapp: "+971 50 456 7890",
+        rating: 4.6
+      },
+      amenities: ["Garden", "Parking", "Storage", "Security"],
+      availability: "Available Now",
+      emirate: "abu-dhabi"
+    },
+    {
+      id: 5,
+      title: "Luxury 2BR Apartment in Abu Dhabi Corniche",
+      location: "Abu Dhabi",
+      coordinates: { lat: 24.4795, lng: 54.3570 },
+      price: "AED 11,000",
+      period: "/month",
+      type: "apartment",
+      beds: 2,
+      baths: 2,
+      area: "1,300 sq ft",
+      image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      images: [
+        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+      ],
+      features: ["Sea View", "Furnished", "Gym", "Pool", "Parking"],
+      verified: true,
+      contact: "+971 50 567 8901",
+      nearbyPlaces: ["Corniche - 100m", "Mall - 800m", "Marina - 500m"],
+      description: "Beautiful apartment with sea views on Abu Dhabi Corniche.",
+      landlord: {
+        name: "Omar Hassan",
+        phone: "+971 50 567 8901",
+        whatsapp: "+971 50 567 8901",
+        rating: 4.8
+      },
+      amenities: ["Sea View", "Gym", "Pool", "Parking", "Security"],
+      availability: "Available from July 15",
+      emirate: "abu-dhabi"
+    },
+    // Ajman Properties
+    {
+      id: 6,
+      title: "Affordable 1BR Apartment in Ajman",
+      location: "Ajman",
+      coordinates: { lat: 25.4052, lng: 55.5136 },
+      price: "AED 3,500",
+      period: "/month",
+      type: "apartment",
+      beds: 1,
+      baths: 1,
+      area: "650 sq ft",
       image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       images: [
         "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
       ],
-      features: ["WiFi Included", "AC", "Near Metro", "24/7 Security", "Utilities Included"],
+      features: ["Semi-Furnished", "Parking", "Near Beach"],
       verified: true,
-      contact: "+971 50 456 7890",
-      nearbyPlaces: ["Deira City Centre - 800m", "Metro Station - 200m", "Gold Souk - 1km"],
-      description: "Clean and comfortable bedspace in a well-maintained building with all utilities included.",
+      contact: "+971 50 678 9012",
+      nearbyPlaces: ["Beach - 500m", "Mall - 1km", "Hospital - 1.5km"],
+      description: "Comfortable 1-bedroom apartment near Ajman beach.",
       landlord: {
-        name: "Mohammed Ali",
-        phone: "+971 50 456 7890",
-        whatsapp: "+971 50 456 7890",
+        name: "Ali Mahmoud",
+        phone: "+971 50 678 9012",
+        whatsapp: "+971 50 678 9012",
         rating: 4.3
       },
-      amenities: ["Shared Kitchen", "Laundry", "Common Area", "Storage"],
+      amenities: ["Parking", "Security", "Near Beach"],
       availability: "Available Now",
-      emirate: "dubai"
-    },
-    {
-      id: 4,
-      title: "Executive Office Space in Business Bay",
-      location: "Business Bay",
-      coordinates: { lat: 25.1916, lng: 55.2650 },
-      price: "AED 8,000",
-      period: "/month",
-      type: "commercial",
-      beds: "Office",
-      baths: 1,
-      area: "800 sq ft",
-      image: "https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      images: [
-        "https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-      ],
-      features: ["Furnished", "Meeting Room", "Reception Area", "Parking", "High Floor"],
-      verified: true,
-      contact: "+971 50 234 5678",
-      nearbyPlaces: ["Metro Station - 400m", "Restaurants - 100m", "Banks - 200m"],
-      description: "Premium office space with stunning city views, perfect for small businesses and startups.",
-      landlord: {
-        name: "Corporate Properties LLC",
-        phone: "+971 50 234 5678",
-        whatsapp: "+971 50 234 5678",
-        rating: 4.7
-      },
-      amenities: ["High-Speed Internet", "24/7 Security", "Cleaning Service", "Business Center"],
-      availability: "Available Now",
-      emirate: "dubai"
+      emirate: "ajman"
     }
   ];
 
   useEffect(() => {
+    console.log('Filtering properties with criteria:', searchCriteria);
+    
     // Filter properties based on search criteria
     let filteredProperties = allProperties.filter(property => {
-      // Location filter
-      if (searchCriteria.location && !property.location.toLowerCase().includes(searchCriteria.location.toLowerCase())) {
-        return false;
+      // Location filter - check if property location contains search location
+      if (searchCriteria.location) {
+        const searchLocation = searchCriteria.location.toLowerCase();
+        const propertyLocation = property.location.toLowerCase();
+        if (!propertyLocation.includes(searchLocation) && searchLocation !== 'all locations') {
+          return false;
+        }
       }
       
       // Property type filter
-      if (searchCriteria.propertyType && property.type !== searchCriteria.propertyType) {
+      if (searchCriteria.propertyType && searchCriteria.propertyType !== 'all' && property.type !== searchCriteria.propertyType) {
         return false;
       }
       
-      // Emirate filter
-      if (searchCriteria.emirate && searchCriteria.emirate !== 'all' && property.emirate !== searchCriteria.emirate) {
-        return false;
+      // Emirate filter - but allow properties from the location's emirate
+      if (searchCriteria.emirate && searchCriteria.emirate !== 'all') {
+        // If searching Dubai Marina but emirate is abu-dhabi, still show Dubai Marina properties
+        if (searchCriteria.location.toLowerCase().includes('dubai marina')) {
+          // Keep Dubai Marina properties regardless of emirate filter
+        } else if (property.emirate !== searchCriteria.emirate) {
+          return false;
+        }
       }
       
       // Price range filter
@@ -209,18 +282,37 @@ const PropertySearchResults = ({ searchCriteria }: { searchCriteria: SearchCrite
         }
       }
       
+      // Bedrooms filter
+      if (searchCriteria.bedrooms && searchCriteria.bedrooms !== 'any') {
+        const searchBeds = parseInt(searchCriteria.bedrooms);
+        const propertyBeds = typeof property.beds === 'string' ? 0 : property.beds;
+        if (propertyBeds !== searchBeds) {
+          return false;
+        }
+      }
+      
       return true;
     });
 
-    // Add distance calculation if location is provided
+    // Add distance calculation and sort by distance
     if (searchCriteria.location) {
-      // Mock distance calculation - in real app, use actual coordinates
+      // Set map center based on location
+      if (searchCriteria.location.toLowerCase().includes('dubai marina')) {
+        setMapCenter({ lat: 25.0772, lng: 55.1392 });
+      } else if (searchCriteria.location.toLowerCase().includes('abu dhabi')) {
+        setMapCenter({ lat: 24.4539, lng: 54.3773 });
+      } else if (searchCriteria.location.toLowerCase().includes('ajman')) {
+        setMapCenter({ lat: 25.4052, lng: 55.5136 });
+      }
+
+      // Calculate distances from search center
       filteredProperties = filteredProperties.map(property => ({
         ...property,
-        distance: Math.random() * 5 + 0.5 // Random distance between 0.5-5.5 km
+        distance: Math.random() * 3 + 0.2 // Mock distance calculation
       })).sort((a, b) => (a.distance || 0) - (b.distance || 0));
     }
 
+    console.log('Filtered properties:', filteredProperties);
     setProperties(filteredProperties);
   }, [searchCriteria]);
 
@@ -288,6 +380,7 @@ const PropertySearchResults = ({ searchCriteria }: { searchCriteria: SearchCrite
             <GoogleMapComponent 
               properties={properties} 
               onPropertySelect={handleViewDetails}
+              center={mapCenter}
             />
           </div>
         )}
