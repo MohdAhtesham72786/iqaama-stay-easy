@@ -1,33 +1,44 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Search, MapPin, Users, Shield } from 'lucide-react';
 import { Button } from './ui/button';
+import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      console.log('Searching for:', searchQuery);
+      // Navigate to search results with the query
+      const params = new URLSearchParams({
+        location: searchQuery,
+        tab: 'rent'
+      });
+      navigate(`/search-results?${params.toString()}`);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   return (
     <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 text-white overflow-hidden">
-      {/* Background Images */}
+      {/* Dubai Building Background */}
       <div className="absolute inset-0">
-        <div className="grid grid-cols-3 h-full opacity-20">
-          <img 
-            src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-            alt="Dubai Building" 
-            className="w-full h-full object-cover"
-          />
-          <img 
-            src="https://images.unsplash.com/photo-1518005020951-eccb494ad742?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-            alt="UAE Architecture" 
-            className="w-full h-full object-cover"
-          />
-          <img 
-            src="https://images.unsplash.com/photo-1496307653780-42ee777d4833?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-            alt="Modern Building" 
-            className="w-full h-full object-cover"
-          />
-        </div>
+        <img 
+          src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
+          alt="Dubai Skyline" 
+          className="w-full h-full object-cover opacity-30"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/70 to-blue-800/70"></div>
       </div>
       
-      <div className="absolute inset-0 bg-black/40"></div>
+      <div className="absolute inset-0 bg-black/20"></div>
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <div className="text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
@@ -59,21 +70,17 @@ const Hero = () => {
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex-1">
                   <input
-                    id="hero-search"
                     type="text"
                     placeholder="Search by location, area, or property name..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyPress={handleKeyPress}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                   />
                 </div>
                 <Button 
                   className="bg-blue-800 hover:bg-blue-900 text-white px-8 py-3"
-                  onClick={() => {
-                    const searchInput = document.getElementById('hero-search') as HTMLInputElement;
-                    if (searchInput?.value) {
-                      console.log('Searching for:', searchInput.value);
-                      // In real app, this would trigger Google Places API search
-                    }
-                  }}
+                  onClick={handleSearch}
                 >
                   <Search className="h-5 w-5 mr-2" />
                   Search
@@ -91,18 +98,23 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Additional UAE Building Images Section */}
+      {/* Dubai Building Showcase */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-blue-900/80 to-transparent">
-        <div className="flex justify-center items-end h-full pb-4 space-x-4 opacity-30">
+        <div className="flex justify-center items-end h-full pb-4 space-x-4 opacity-40">
           <img 
-            src="https://images.unsplash.com/photo-1459767129954-1b1c1f9b9ace?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" 
-            alt="UAE Building" 
+            src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" 
+            alt="Dubai Marina" 
             className="h-20 w-20 object-cover rounded-lg"
           />
           <img 
-            src="https://images.unsplash.com/photo-1460574283810-2aab119d8511?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" 
-            alt="Modern Architecture" 
+            src="https://images.unsplash.com/photo-1518684079-3c830dcef090?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" 
+            alt="Burj Khalifa" 
             className="h-24 w-24 object-cover rounded-lg"
+          />
+          <img 
+            src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" 
+            alt="Dubai Downtown" 
+            className="h-20 w-20 object-cover rounded-lg"
           />
         </div>
       </div>
