@@ -12,6 +12,7 @@ import Commercial from "./pages/Commercial";
 import DailyRentals from "./pages/DailyRentals";
 import SignIn from "./pages/SignIn";
 import ListProperty from "./pages/ListProperty";
+import SearchResults from "./pages/SearchResults";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/daily-rentals" element={<DailyRentals />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/list-property" element={<ListProperty />} />
+          <Route path="/search-results" element={<SearchResults />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

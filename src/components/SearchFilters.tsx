@@ -1,11 +1,12 @@
-
 import React, { useState } from 'react';
 import { Filter, MapPin, Home, Users, Calendar, Search } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
+import { useNavigate } from 'react-router-dom';
 import GooglePlacesSearch from './GooglePlacesSearch';
 
 const SearchFilters = ({ activeTab = 'rent' }) => {
+  const navigate = useNavigate();
   const [currentTab, setCurrentTab] = useState(activeTab);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [searchCriteria, setSearchCriteria] = useState({
@@ -37,7 +38,6 @@ const SearchFilters = ({ activeTab = 'rent' }) => {
   const handleLocationSelect = (location) => {
     setSelectedLocation(location);
     console.log('Selected location:', location);
-    // In production, this would update the search results based on location
   };
 
   const handleSearch = () => {
@@ -50,16 +50,26 @@ const SearchFilters = ({ activeTab = 'rent' }) => {
     
     console.log('Searching with comprehensive filters:', searchData);
     
-    // Save search to localStorage (simulating database save)
+    // Save search to localStorage
     const savedSearches = JSON.parse(localStorage.getItem('searchHistory') || '[]');
     savedSearches.unshift(searchData);
     localStorage.setItem('searchHistory', JSON.stringify(savedSearches.slice(0, 10)));
     
-    // In production, this would:
-    // 1. Send data to backend API
-    // 2. Save to database
-    // 3. Trigger property search with location-based results
-    // 4. Update property listings based on Google Maps coordinates
+    // Navigate to search results page
+    const params = new URLSearchParams({
+      location: selectedLocation?.name || '',
+      type: searchCriteria.propertyType,
+      emirate: searchCriteria.emirate,
+      price: searchCriteria.priceRange,
+      beds: searchCriteria.bedrooms,
+      availability: searchCriteria.availability,
+      metro: searchCriteria.nearMetro,
+      mall: searchCriteria.nearMall,
+      beach: searchCriteria.nearBeach,
+      tab: currentTab
+    });
+    
+    navigate(`/search-results?${params.toString()}`);
   };
 
   const handleFilterChange = (key, value) => {
