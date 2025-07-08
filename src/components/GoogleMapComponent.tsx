@@ -72,10 +72,10 @@ const GoogleMapComponent = ({ properties, onPropertySelect, center }: GoogleMapC
 
     try {
       // Initialize map
-      const map = new google.maps.Map(mapRef.current, {
+      const map = new window.google.maps.Map(mapRef.current, {
         center: defaultCenter,
         zoom: 13,
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        mapTypeId: window.google.maps.MapTypeId.ROADMAP,
         styles: [
           {
             featureType: 'poi.business',
@@ -108,7 +108,7 @@ const GoogleMapComponent = ({ properties, onPropertySelect, center }: GoogleMapC
     // Add markers for each property
     properties.forEach((property, index) => {
       try {
-        const marker = new google.maps.Marker({
+        const marker = new window.google.maps.Marker({
           position: property.coordinates,
           map: mapInstanceRef.current,
           title: property.title,
@@ -122,8 +122,8 @@ const GoogleMapComponent = ({ properties, onPropertySelect, center }: GoogleMapC
                 </g>
               </svg>
             `),
-            scaledSize: new google.maps.Size(40, 50),
-            anchor: new google.maps.Point(20, 50)
+            scaledSize: new window.google.maps.Size(40, 50),
+            anchor: new window.google.maps.Point(20, 50)
           }
         });
 
@@ -141,7 +141,7 @@ const GoogleMapComponent = ({ properties, onPropertySelect, center }: GoogleMapC
 
     // Adjust map bounds to show all markers
     if (properties.length > 0 && mapInstanceRef.current) {
-      const bounds = new google.maps.LatLngBounds();
+      const bounds = new window.google.maps.LatLngBounds();
       properties.forEach(property => {
         bounds.extend(property.coordinates);
       });
