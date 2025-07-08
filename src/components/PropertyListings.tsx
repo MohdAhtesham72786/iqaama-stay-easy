@@ -4,6 +4,25 @@ import { MapPin, Bed, Bath, Square, Heart, MessageCircle, Phone, Filter, Navigat
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 
+interface Property {
+  id: number;
+  title: string;
+  location: string;
+  coordinates: { lat: number; lng: number };
+  price: string;
+  period: string;
+  type: string;
+  beds: number | string;
+  baths: number | string;
+  area: string;
+  image: string;
+  features: string[];
+  verified: boolean;
+  contact: string;
+  nearbyPlaces: string[];
+  distance?: number;
+}
+
 const PropertyListings = ({ type }) => {
   const [viewMode, setViewMode] = useState('grid');
   const [showFilters, setShowFilters] = useState(false);
@@ -17,8 +36,8 @@ const PropertyListings = ({ type }) => {
     }
   }, []);
 
-  const getPropertiesForType = (propertyType) => {
-    const baseProperties = [
+  const getPropertiesForType = (propertyType): Property[] => {
+    const baseProperties: Property[] = [
       {
         id: 1,
         title: "Modern 1BR Apartment in Dubai Marina",
@@ -151,7 +170,7 @@ const PropertyListings = ({ type }) => {
           property.coordinates.lng
         );
         return { ...property, distance };
-      }).sort((a, b) => a.distance - b.distance);
+      }).sort((a, b) => (a.distance || 0) - (b.distance || 0));
     }
 
     // Adjust prices for buy type
