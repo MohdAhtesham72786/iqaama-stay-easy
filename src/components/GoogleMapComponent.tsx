@@ -33,8 +33,8 @@ interface GoogleMapComponentProps {
 
 const GoogleMapComponent = ({ properties, onPropertySelect, center }: GoogleMapComponentProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<google.maps.Map | null>(null);
-  const markersRef = useRef<google.maps.Marker[]>([]);
+  const mapInstanceRef = useRef<any>(null);
+  const markersRef = useRef<any[]>([]);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   
@@ -68,7 +68,7 @@ const GoogleMapComponent = ({ properties, onPropertySelect, center }: GoogleMapC
 
   // Initialize map
   useEffect(() => {
-    if (!isLoaded || !mapRef.current) return;
+    if (!isLoaded || !mapRef.current || !window.google) return;
 
     try {
       // Initialize map
@@ -97,7 +97,7 @@ const GoogleMapComponent = ({ properties, onPropertySelect, center }: GoogleMapC
 
   // Update markers when properties change
   useEffect(() => {
-    if (!mapInstanceRef.current || !isLoaded) return;
+    if (!mapInstanceRef.current || !isLoaded || !window.google) return;
 
     // Clear existing markers
     markersRef.current.forEach(marker => marker.setMap(null));
@@ -140,7 +140,7 @@ const GoogleMapComponent = ({ properties, onPropertySelect, center }: GoogleMapC
     });
 
     // Adjust map bounds to show all markers
-    if (properties.length > 0 && mapInstanceRef.current) {
+    if (properties.length > 0 && mapInstanceRef.current && window.google) {
       const bounds = new window.google.maps.LatLngBounds();
       properties.forEach(property => {
         bounds.extend(property.coordinates);
