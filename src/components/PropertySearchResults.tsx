@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { MapPin, Bed, Bath, Square, Heart, MessageCircle, Phone, Filter, Navigation, MapIcon, Star, Car, Wifi, Clock, CheckCircle } from 'lucide-react';
 import { Button } from './ui/button';
@@ -120,6 +121,35 @@ const PropertySearchResults = ({ searchCriteria }: { searchCriteria: SearchCrite
       emirate: "dubai",
       country: "uae"
     },
+    {
+      id: 11,
+      title: "Modern Studio in Downtown Dubai",
+      location: "Downtown Dubai",
+      coordinates: { lat: 25.1972, lng: 55.2744 },
+      price: "AED 6,500",
+      period: "/month",
+      type: "apartment",
+      beds: "Studio",
+      baths: 1,
+      area: "550 sq ft",
+      image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      images: ["https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"],
+      features: ["Furnished", "City View", "Gym", "Pool"],
+      verified: true,
+      contact: "+971 50 345 6789",
+      nearbyPlaces: ["Dubai Mall - 1km", "Burj Khalifa - 800m", "Metro - 300m"],
+      description: "Modern studio apartment in the heart of Downtown Dubai.",
+      landlord: {
+        name: "Omar Al Zaabi",
+        phone: "+971 50 345 6789",
+        whatsapp: "+971 50 345 6789",
+        rating: 4.6
+      },
+      amenities: ["Gym", "Pool", "Security", "Concierge"],
+      availability: "Available Now",
+      emirate: "dubai",
+      country: "uae"
+    },
     // Oman Properties
     {
       id: 3,
@@ -153,7 +183,7 @@ const PropertySearchResults = ({ searchCriteria }: { searchCriteria: SearchCrite
     {
       id: 4,
       title: "Modern 2BR Apartment in Muscat Hills",
-      location: "Muscat",
+      location: "Muscat Hills",
       coordinates: { lat: 23.6105, lng: 58.5416 },
       price: "OMR 450",
       period: "/month",
@@ -175,6 +205,35 @@ const PropertySearchResults = ({ searchCriteria }: { searchCriteria: SearchCrite
         rating: 4.5
       },
       amenities: ["Gym", "Pool", "Security", "Parking"],
+      availability: "Available Now",
+      emirate: "muscat",
+      country: "oman"
+    },
+    {
+      id: 12,
+      title: "Waterfront Apartment in Oman",
+      location: "Muscat Waterfront",
+      coordinates: { lat: 23.5859, lng: 58.4059 },
+      price: "OMR 700",
+      period: "/month",
+      type: "apartment",
+      beds: 3,
+      baths: 2,
+      area: "1,600 sq ft",
+      image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      images: ["https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"],
+      features: ["Sea View", "Balcony", "Parking", "Modern"],
+      verified: true,
+      contact: "+968 9345 6789",
+      nearbyPlaces: ["Corniche - 100m", "Shopping Mall - 1km", "Airport - 15km"],
+      description: "Beautiful waterfront apartment with sea views in Muscat.",
+      landlord: {
+        name: "Said Al Busaidi",
+        phone: "+968 9345 6789",
+        whatsapp: "+968 9345 6789",
+        rating: 4.7
+      },
+      amenities: ["Sea View", "Parking", "Security", "Modern Facilities"],
       availability: "Available Now",
       emirate: "muscat",
       country: "oman"
@@ -359,64 +418,69 @@ const PropertySearchResults = ({ searchCriteria }: { searchCriteria: SearchCrite
   ];
 
   useEffect(() => {
-    console.log('Filtering properties with criteria:', searchCriteria);
+    console.log('Search criteria received:', searchCriteria);
     
-    // Filter properties based on search criteria
+    // Filter properties based on search criteria - improved logic
     let filteredProperties = allProperties.filter(property => {
-      // Location filter - check if property location or country contains search location
-      if (searchCriteria.location) {
-        const searchLocation = searchCriteria.location.toLowerCase();
-        const propertyLocation = property.location.toLowerCase();
-        const propertyCountry = property.country.toLowerCase();
-        
-        // Check for country names
-        if (searchLocation.includes('oman') || searchLocation.includes('muscat')) {
-          if (propertyCountry !== 'oman') return false;
-        } else if (searchLocation.includes('qatar') || searchLocation.includes('doha')) {
-          if (propertyCountry !== 'qatar') return false;
-        } else if (searchLocation.includes('saudi') || searchLocation.includes('riyadh') || searchLocation.includes('jeddah')) {
-          if (propertyCountry !== 'saudi-arabia') return false;
-        } else if (searchLocation.includes('bahrain') || searchLocation.includes('manama')) {
-          if (propertyCountry !== 'bahrain') return false;
-        } else if (searchLocation.includes('dubai') || searchLocation.includes('uae') || searchLocation.includes('emirates')) {
-          if (propertyCountry !== 'uae') return false;
-        } else if (searchLocation !== 'all locations' && searchLocation.trim() !== '') {
-          // General location search
-          if (!propertyLocation.includes(searchLocation) && !propertyCountry.includes(searchLocation)) {
-            return false;
-          }
-        }
+      // If no location specified, show all properties
+      if (!searchCriteria.location || searchCriteria.location.trim() === '') {
+        console.log('No location filter, showing all properties');
+        return true;
       }
       
-      // Property type filter
-      if (searchCriteria.propertyType && searchCriteria.propertyType !== 'all' && property.type !== searchCriteria.propertyType) {
+      const searchLocation = searchCriteria.location.toLowerCase().trim();
+      const propertyLocation = property.location.toLowerCase();
+      const propertyCountry = property.country.toLowerCase();
+      const propertyEmirate = property.emirate.toLowerCase();
+      
+      console.log(`Checking property: ${property.title}`);
+      console.log(`Search location: "${searchLocation}"`);
+      console.log(`Property location: "${propertyLocation}"`);
+      console.log(`Property country: "${propertyCountry}"`);
+      
+      // Location matching logic - much more flexible
+      let locationMatch = false;
+      
+      // Direct location match
+      if (propertyLocation.includes(searchLocation) || 
+          propertyEmirate.includes(searchLocation) ||
+          searchLocation.includes(propertyLocation) ||
+          searchLocation.includes(propertyEmirate)) {
+        locationMatch = true;
+      }
+      
+      // Country-based matching
+      if (searchLocation.includes('oman') || searchLocation.includes('muscat')) {
+        locationMatch = propertyCountry === 'oman';
+      } else if (searchLocation.includes('qatar') || searchLocation.includes('doha')) {
+        locationMatch = propertyCountry === 'qatar';
+      } else if (searchLocation.includes('saudi') || searchLocation.includes('riyadh') || searchLocation.includes('jeddah')) {
+        locationMatch = propertyCountry === 'saudi-arabia';
+      } else if (searchLocation.includes('bahrain') || searchLocation.includes('manama')) {
+        locationMatch = propertyCountry === 'bahrain';
+      } else if (searchLocation.includes('dubai') || searchLocation.includes('uae') || searchLocation.includes('emirates')) {
+        locationMatch = propertyCountry === 'uae';
+      }
+      
+      console.log(`Location match result: ${locationMatch}`);
+      
+      if (!locationMatch) {
         return false;
       }
       
-      // Price range filter (convert different currencies for comparison)
-      if (searchCriteria.priceRange && searchCriteria.priceRange !== '') {
-        const propertyPriceStr = property.price.replace(/\D/g, '');
-        const propertyPrice = parseInt(propertyPriceStr);
-        const [min, max] = searchCriteria.priceRange.split('-').map(p => parseInt(p.replace(/\D/g, '')));
-        
-        // Convert to USD for comparison (rough conversion)
-        let convertedPrice = propertyPrice;
-        if (property.price.includes('OMR')) convertedPrice *= 2.6;
-        else if (property.price.includes('QAR')) convertedPrice *= 0.27;
-        else if (property.price.includes('SAR')) convertedPrice *= 0.27;
-        else if (property.price.includes('BHD')) convertedPrice *= 2.65;
-        else if (property.price.includes('AED')) convertedPrice *= 0.27;
-        
-        if (convertedPrice < min || (max && convertedPrice > max)) {
+      // Property type filter
+      if (searchCriteria.propertyType && searchCriteria.propertyType !== 'all' && searchCriteria.propertyType !== '') {
+        if (property.type !== searchCriteria.propertyType) {
           return false;
         }
       }
       
       // Bedrooms filter
-      if (searchCriteria.bedrooms && searchCriteria.bedrooms !== 'any') {
-        const searchBeds = parseInt(searchCriteria.bedrooms);
-        const propertyBeds = typeof property.beds === 'string' ? 0 : property.beds;
-        if (propertyBeds !== searchBeds) {
+      if (searchCriteria.bedrooms && searchCriteria.bedrooms !== 'any' && searchCriteria.bedrooms !== '') {
+        const searchBeds = searchCriteria.bedrooms.toLowerCase();
+        const propertyBeds = typeof property.beds === 'string' ? property.beds.toLowerCase() : property.beds.toString();
+        
+        if (searchBeds !== 'any' && propertyBeds !== searchBeds) {
           return false;
         }
       }
@@ -441,14 +505,14 @@ const PropertySearchResults = ({ searchCriteria }: { searchCriteria: SearchCrite
         setMapCenter({ lat: 25.0772, lng: 55.1392 });
       }
 
-      // Calculate distances from search center
+      // Calculate distances from search center (mock calculation)
       filteredProperties = filteredProperties.map(property => ({
         ...property,
-        distance: Math.random() * 5 + 0.5 // Mock distance calculation
+        distance: Math.random() * 5 + 0.5
       })).sort((a, b) => (a.distance || 0) - (b.distance || 0));
     }
 
-    console.log('Filtered properties:', filteredProperties);
+    console.log(`Total filtered properties: ${filteredProperties.length}`);
     setProperties(filteredProperties);
   }, [searchCriteria]);
 
@@ -475,7 +539,7 @@ const PropertySearchResults = ({ searchCriteria }: { searchCriteria: SearchCrite
         {/* Search Results Header */}
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Search Results for "{searchCriteria.location || 'All Locations'}"
+            Search Results {searchCriteria.location && `for "${searchCriteria.location}"`}
           </h1>
           <p className="text-gray-600">
             Found {properties.length} properties matching your criteria across GCC countries
@@ -522,7 +586,7 @@ const PropertySearchResults = ({ searchCriteria }: { searchCriteria: SearchCrite
         )}
 
         {/* Property Grid/List */}
-        {viewMode !== 'map' && (
+        {viewMode !== 'map' && properties.length > 0 && (
           <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
             {properties.map((property) => (
               <Card key={property.id} className={`overflow-hidden hover:shadow-lg transition-all duration-300 ${viewMode === 'list' ? 'flex' : ''}`}>
@@ -672,7 +736,9 @@ const PropertySearchResults = ({ searchCriteria }: { searchCriteria: SearchCrite
           <div className="text-center py-12">
             <MapPin className="h-16 w-16 text-gray-300 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">No Properties Found</h3>
-            <p className="text-gray-600">Try searching for Dubai, Oman, Qatar, Saudi Arabia, or Bahrain to find properties.</p>
+            <p className="text-gray-600">
+              Try searching for specific locations like Dubai, Muscat, Doha, Riyadh, or Manama to find properties.
+            </p>
           </div>
         )}
       </div>
