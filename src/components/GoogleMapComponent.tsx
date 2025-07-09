@@ -41,10 +41,14 @@ const GoogleMapComponent = ({ properties, onPropertySelect, center }: GoogleMapC
   // Default center to Dubai Marina
   const defaultCenter = center || { lat: 25.0772, lng: 55.1392 };
 
+  console.log('GoogleMapComponent - Received properties:', properties);
+  console.log('GoogleMapComponent - Center:', center || defaultCenter);
+
   // Load Google Maps API
   useEffect(() => {
     const loadGoogleMaps = () => {
       if (window.google && window.google.maps) {
+        console.log('Google Maps API already loaded');
         setIsLoaded(true);
         return;
       }
@@ -54,7 +58,10 @@ const GoogleMapComponent = ({ properties, onPropertySelect, center }: GoogleMapC
       script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dOWTgHz8KD0x5Y&libraries=places`;
       script.async = true;
       script.defer = true;
-      script.onload = () => setIsLoaded(true);
+      script.onload = () => {
+        console.log('Google Maps API loaded successfully');
+        setIsLoaded(true);
+      };
       script.onerror = () => {
         console.error('Failed to load Google Maps API');
         setIsLoaded(false);
@@ -74,7 +81,7 @@ const GoogleMapComponent = ({ properties, onPropertySelect, center }: GoogleMapC
       // Initialize map
       const map = new window.google.maps.Map(mapRef.current, {
         center: defaultCenter,
-        zoom: 13,
+        zoom: 10,
         mapTypeId: window.google.maps.MapTypeId.ROADMAP,
         styles: [
           {
@@ -89,7 +96,7 @@ const GoogleMapComponent = ({ properties, onPropertySelect, center }: GoogleMapC
       });
 
       mapInstanceRef.current = map;
-      console.log('Google Map initialized successfully');
+      console.log('Google Map initialized successfully with center:', defaultCenter);
     } catch (error) {
       console.error('Error initializing Google Map:', error);
     }
@@ -97,17 +104,32 @@ const GoogleMapComponent = ({ properties, onPropertySelect, center }: GoogleMapC
 
   // Update markers when properties change
   useEffect(() => {
-    if (!mapInstanceRef.current || !isLoaded || !window.google) return;
+    if (!mapInstanceRef.current || !isLoaded || !window.google) {
+      console.log('Map not ready for markers:', { 
+        mapInstance: !!mapInstanceRef.current, 
+        isLoaded, 
+        googleMaps: !!window.google 
+      });
+      return;
+    }
 
     // Clear existing markers
+    console.log('Clearing existing markers:', markersRef.current.length);
     markersRef.current.forEach(marker => marker.setMap(null));
     markersRef.current = [];
 
-    console.log('Adding markers for properties:', properties);
+    console.log('Adding markers for properties:', properties.length);
+
+    if (properties.length === 0) {
+      console.log('No properties to display on map');
+      return;
+    }
 
     // Add markers for each property
     properties.forEach((property, index) => {
       try {
+        console.log(`Creating marker for property ${property.id}:`, property.title, property.coordinates);
+        
         const marker = new window.google.maps.Marker({
           position: property.coordinates,
           map: mapInstanceRef.current,
@@ -118,7 +140,7 @@ const GoogleMapComponent = ({ properties, onPropertySelect, center }: GoogleMapC
                 <g>
                   <path d="M20 0C8.95 0 0 8.95 0 20c0 15 20 30 20 30s20-15 20-30C40 8.95 31.05 0 20 0z" fill="#1e40af"/>
                   <circle cx="20" cy="20" r="8" fill="white"/>
-                  <text x="20" y="25" text-anchor="middle" fill="#1e40af" font-size="10" font-weight="bold">${property.price.replace('AED ', '').split(',')[0]}</text>
+                  <text x="20" y="25" text-anchor="middle" fill="#1e40af" font-size="8" font-weight="bold">${property.price.split(' ')[1] || 'N/A'}</text>
                 </g>
               </svg>
             `),
@@ -129,11 +151,13 @@ const GoogleMapComponent = ({ properties, onPropertySelect, center }: GoogleMapC
 
         // Add click listener
         marker.addListener('click', () => {
+          console.log('Marker clicked for property:', property.title);
           setSelectedProperty(property);
           mapInstanceRef.current?.panTo(property.coordinates);
         });
 
         markersRef.current.push(marker);
+        console.log(`Marker created successfully for property ${property.id}`);
       } catch (error) {
         console.error('Error creating marker for property:', property.id, error);
       }
@@ -151,7 +175,17 @@ const GoogleMapComponent = ({ properties, onPropertySelect, center }: GoogleMapC
         mapInstanceRef.current.setZoom(15);
       } else {
         mapInstanceRef.current.fitBounds(bounds);
+        // Add some padding to the bounds
+        setTimeout(() => {
+          if (mapInstanceRef.current) {
+            const currentZoom = mapInstanceRef.current.getZoom();
+            if (currentZoom > 15) {
+              mapInstanceRef.current.setZoom(15);
+            }
+          }
+        }, 100);
       }
+      console.log('Map bounds adjusted for', properties.length, 'properties');
     }
   }, [properties, isLoaded]);
 

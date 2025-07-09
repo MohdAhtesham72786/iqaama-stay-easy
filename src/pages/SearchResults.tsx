@@ -39,18 +39,19 @@ const SearchResults = () => {
     const savedSearch = JSON.parse(localStorage.getItem('searchHistory') || '[]')[0];
     
     const criteria: SearchCriteria = {
-      location: urlParams.get('location') || savedSearch?.location?.name || 'dubai marina',
-      propertyType: urlParams.get('type') || savedSearch?.criteria?.propertyType || 'apartment',
-      emirate: urlParams.get('emirate') || savedSearch?.criteria?.emirate || 'dubai',
-      priceRange: urlParams.get('price') || savedSearch?.criteria?.priceRange || '5000-10000',
-      bedrooms: urlParams.get('beds') || savedSearch?.criteria?.bedrooms || '1',
+      location: urlParams.get('location') || savedSearch?.location?.name || '',
+      propertyType: urlParams.get('type') || savedSearch?.criteria?.propertyType || '',
+      emirate: urlParams.get('emirate') || savedSearch?.criteria?.emirate || '',
+      priceRange: urlParams.get('price') || savedSearch?.criteria?.priceRange || '',
+      bedrooms: urlParams.get('beds') || savedSearch?.criteria?.bedrooms || '',
       availability: urlParams.get('availability') || savedSearch?.criteria?.availability || '',
-      nearMetro: urlParams.get('metro') || savedSearch?.criteria?.nearMetro || '1km',
-      nearMall: urlParams.get('mall') || savedSearch?.criteria?.nearMall || '2km',
-      nearBeach: urlParams.get('beach') || savedSearch?.criteria?.nearBeach || '1km',
+      nearMetro: urlParams.get('metro') || savedSearch?.criteria?.nearMetro || '',
+      nearMall: urlParams.get('mall') || savedSearch?.criteria?.nearMall || '',
+      nearBeach: urlParams.get('beach') || savedSearch?.criteria?.nearBeach || '',
       tab: urlParams.get('tab') || savedSearch?.tab || 'rent'
     };
 
+    console.log('SearchResults - Setting criteria:', criteria);
     setSearchCriteria(criteria);
   }, [location]);
 

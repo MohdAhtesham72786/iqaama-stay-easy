@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { MapPin, Bed, Bath, Square, Heart, MessageCircle, Phone, Filter, Navigation, MapIcon, Star, Car, Wifi, Clock, CheckCircle } from 'lucide-react';
 import { Button } from './ui/button';
@@ -418,75 +417,60 @@ const PropertySearchResults = ({ searchCriteria }: { searchCriteria: SearchCrite
   ];
 
   useEffect(() => {
-    console.log('Search criteria received:', searchCriteria);
+    console.log('PropertySearchResults - Search criteria received:', searchCriteria);
     
-    // Filter properties based on search criteria - improved logic
-    let filteredProperties = allProperties.filter(property => {
-      // If no location specified, show all properties
-      if (!searchCriteria.location || searchCriteria.location.trim() === '') {
-        console.log('No location filter, showing all properties');
-        return true;
-      }
-      
+    // Filter properties based on search criteria
+    let filteredProperties = allProperties;
+    
+    // Location filtering - much more flexible approach
+    if (searchCriteria.location && searchCriteria.location.trim() !== '') {
       const searchLocation = searchCriteria.location.toLowerCase().trim();
-      const propertyLocation = property.location.toLowerCase();
-      const propertyCountry = property.country.toLowerCase();
-      const propertyEmirate = property.emirate.toLowerCase();
+      console.log('Filtering by location:', searchLocation);
       
-      console.log(`Checking property: ${property.title}`);
-      console.log(`Search location: "${searchLocation}"`);
-      console.log(`Property location: "${propertyLocation}"`);
-      console.log(`Property country: "${propertyCountry}"`);
-      
-      // Location matching logic - much more flexible
-      let locationMatch = false;
-      
-      // Direct location match
-      if (propertyLocation.includes(searchLocation) || 
-          propertyEmirate.includes(searchLocation) ||
-          searchLocation.includes(propertyLocation) ||
-          searchLocation.includes(propertyEmirate)) {
-        locationMatch = true;
-      }
-      
-      // Country-based matching
-      if (searchLocation.includes('oman') || searchLocation.includes('muscat')) {
-        locationMatch = propertyCountry === 'oman';
-      } else if (searchLocation.includes('qatar') || searchLocation.includes('doha')) {
-        locationMatch = propertyCountry === 'qatar';
-      } else if (searchLocation.includes('saudi') || searchLocation.includes('riyadh') || searchLocation.includes('jeddah')) {
-        locationMatch = propertyCountry === 'saudi-arabia';
-      } else if (searchLocation.includes('bahrain') || searchLocation.includes('manama')) {
-        locationMatch = propertyCountry === 'bahrain';
-      } else if (searchLocation.includes('dubai') || searchLocation.includes('uae') || searchLocation.includes('emirates')) {
-        locationMatch = propertyCountry === 'uae';
-      }
-      
-      console.log(`Location match result: ${locationMatch}`);
-      
-      if (!locationMatch) {
-        return false;
-      }
-      
-      // Property type filter
-      if (searchCriteria.propertyType && searchCriteria.propertyType !== 'all' && searchCriteria.propertyType !== '') {
-        if (property.type !== searchCriteria.propertyType) {
-          return false;
+      filteredProperties = allProperties.filter(property => {
+        const propertyLocation = property.location.toLowerCase();
+        const propertyCountry = property.country.toLowerCase();
+        const propertyEmirate = property.emirate.toLowerCase();
+        
+        // Direct location matching
+        const directMatch = propertyLocation.includes(searchLocation) || 
+                           propertyEmirate.includes(searchLocation) ||
+                           searchLocation.includes(propertyLocation) ||
+                           searchLocation.includes(propertyEmirate);
+        
+        // Country-based matching
+        let countryMatch = false;
+        if (searchLocation.includes('oman') || searchLocation.includes('muscat')) {
+          countryMatch = propertyCountry === 'oman';
+        } else if (searchLocation.includes('qatar') || searchLocation.includes('doha')) {
+          countryMatch = propertyCountry === 'qatar';
+        } else if (searchLocation.includes('saudi') || searchLocation.includes('riyadh') || searchLocation.includes('jeddah')) {
+          countryMatch = propertyCountry === 'saudi-arabia';
+        } else if (searchLocation.includes('bahrain') || searchLocation.includes('manama')) {
+          countryMatch = propertyCountry === 'bahrain';
+        } else if (searchLocation.includes('dubai') || searchLocation.includes('uae') || searchLocation.includes('emirates')) {
+          countryMatch = propertyCountry === 'uae';
         }
-      }
-      
-      // Bedrooms filter
-      if (searchCriteria.bedrooms && searchCriteria.bedrooms !== 'any' && searchCriteria.bedrooms !== '') {
+        
+        const matches = directMatch || countryMatch;
+        console.log(`Property: ${property.title}, Location: ${propertyLocation}, Country: ${propertyCountry}, Matches: ${matches}`);
+        return matches;
+      });
+    }
+    
+    // Property type filter
+    if (searchCriteria.propertyType && searchCriteria.propertyType !== 'all' && searchCriteria.propertyType !== '') {
+      filteredProperties = filteredProperties.filter(property => property.type === searchCriteria.propertyType);
+    }
+    
+    // Bedrooms filter
+    if (searchCriteria.bedrooms && searchCriteria.bedrooms !== 'any' && searchCriteria.bedrooms !== '') {
+      filteredProperties = filteredProperties.filter(property => {
         const searchBeds = searchCriteria.bedrooms.toLowerCase();
         const propertyBeds = typeof property.beds === 'string' ? property.beds.toLowerCase() : property.beds.toString();
-        
-        if (searchBeds !== 'any' && propertyBeds !== searchBeds) {
-          return false;
-        }
-      }
-      
-      return true;
-    });
+        return searchBeds === 'any' || propertyBeds === searchBeds;
+      });
+    }
 
     // Set map center based on location
     if (searchCriteria.location) {
@@ -512,7 +496,8 @@ const PropertySearchResults = ({ searchCriteria }: { searchCriteria: SearchCrite
       })).sort((a, b) => (a.distance || 0) - (b.distance || 0));
     }
 
-    console.log(`Total filtered properties: ${filteredProperties.length}`);
+    console.log(`PropertySearchResults - Total filtered properties: ${filteredProperties.length}`);
+    console.log('PropertySearchResults - Filtered properties:', filteredProperties.map(p => p.title));
     setProperties(filteredProperties);
   }, [searchCriteria]);
 
