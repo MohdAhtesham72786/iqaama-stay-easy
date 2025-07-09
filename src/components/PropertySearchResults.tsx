@@ -33,6 +33,7 @@ interface Property {
   amenities: string[];
   availability: string;
   emirate: string;
+  country: string;
 }
 
 interface SearchCriteria {
@@ -55,9 +56,9 @@ const PropertySearchResults = ({ searchCriteria }: { searchCriteria: SearchCrite
   const [favorites, setFavorites] = useState<Set<number>>(new Set());
   const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number }>({ lat: 25.0772, lng: 55.1392 });
 
-  // Extended property data for different locations
+  // Extended property data for all GCC countries
   const allProperties: Property[] = [
-    // Dubai Marina Properties
+    // UAE - Dubai Marina Properties
     {
       id: 1,
       title: "Luxury 1BR Apartment in Dubai Marina with Sea View",
@@ -72,23 +73,23 @@ const PropertySearchResults = ({ searchCriteria }: { searchCriteria: SearchCrite
       image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       images: [
         "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+        "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
       ],
       features: ["Furnished", "Sea View", "Balcony", "Gym Access", "Pool", "Parking"],
       verified: true,
       contact: "+971 50 123 4567",
-      nearbyPlaces: ["Marina Mall - 300m", "Metro Station - 500m", "Beach - 100m", "Restaurants - 200m"],
-      description: "Stunning 1-bedroom apartment with panoramic sea views in the heart of Dubai Marina. Fully furnished with modern amenities and premium finishes.",
+      nearbyPlaces: ["Marina Mall - 300m", "Metro Station - 500m", "Beach - 100m"],
+      description: "Stunning 1-bedroom apartment with panoramic sea views in Dubai Marina.",
       landlord: {
         name: "Ahmed Al Mansouri",
         phone: "+971 50 123 4567",
         whatsapp: "+971 50 123 4567",
         rating: 4.8
       },
-      amenities: ["24/7 Security", "Concierge", "Valet Parking", "Housekeeping", "High-Speed Internet"],
+      amenities: ["24/7 Security", "Concierge", "Valet Parking", "Housekeeping"],
       availability: "Available Now",
-      emirate: "dubai"
+      emirate: "dubai",
+      country: "uae"
     },
     {
       id: 2,
@@ -102,14 +103,12 @@ const PropertySearchResults = ({ searchCriteria }: { searchCriteria: SearchCrite
       baths: 2,
       area: "1,400 sq ft",
       image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      images: [
-        "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-      ],
+      images: ["https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"],
       features: ["Furnished", "Marina View", "Balcony", "Gym", "Pool", "Parking"],
       verified: true,
       contact: "+971 50 234 5678",
       nearbyPlaces: ["Marina Walk - 200m", "Metro Station - 400m", "Beach - 150m"],
-      description: "Spacious 3-bedroom apartment with stunning marina views and modern amenities.",
+      description: "Spacious 3-bedroom apartment with stunning marina views.",
       landlord: {
         name: "Sarah Johnson",
         phone: "+971 50 234 5678",
@@ -118,129 +117,244 @@ const PropertySearchResults = ({ searchCriteria }: { searchCriteria: SearchCrite
       },
       amenities: ["24/7 Security", "Gym", "Pool", "Parking"],
       availability: "Available from Aug 15",
-      emirate: "dubai"
+      emirate: "dubai",
+      country: "uae"
     },
+    // Oman Properties
     {
       id: 3,
-      title: "Modern 2BR Apartment in Dubai Marina with Parking",
-      location: "Dubai Marina",
-      coordinates: { lat: 25.0765, lng: 55.1385 },
-      price: "AED 9,500",
+      title: "Traditional Villa in Muscat with Mountain View",
+      location: "Muscat",
+      coordinates: { lat: 23.5880, lng: 58.3829 },
+      price: "OMR 600",
+      period: "/month",
+      type: "villa",
+      beds: 4,
+      baths: 3,
+      area: "2,500 sq ft",
+      image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      images: ["https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"],
+      features: ["Garden", "Mountain View", "Traditional Architecture", "Parking"],
+      verified: true,
+      contact: "+968 9123 4567",
+      nearbyPlaces: ["Muscat Mall - 2km", "Sultan Qaboos Mosque - 3km", "Beach - 5km"],
+      description: "Beautiful traditional villa with stunning mountain views in Muscat.",
+      landlord: {
+        name: "Abdullah Al Hinai",
+        phone: "+968 9123 4567",
+        whatsapp: "+968 9123 4567",
+        rating: 4.6
+      },
+      amenities: ["Garden", "Parking", "Traditional Design", "Security"],
+      availability: "Available Now",
+      emirate: "muscat",
+      country: "oman"
+    },
+    {
+      id: 4,
+      title: "Modern 2BR Apartment in Muscat Hills",
+      location: "Muscat",
+      coordinates: { lat: 23.6105, lng: 58.5416 },
+      price: "OMR 450",
       period: "/month",
       type: "apartment",
       beds: 2,
       baths: 2,
-      area: "1,100 sq ft",
-      image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      images: [
-        "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-      ],
-      features: ["Semi-Furnished", "City View", "Balcony", "Gym", "Pool"],
+      area: "1,200 sq ft",
+      image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      images: ["https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"],
+      features: ["Modern Design", "Hills View", "Gym", "Pool"],
       verified: true,
-      contact: "+971 50 345 6789",
-      nearbyPlaces: ["Marina Mall - 400m", "Metro Station - 300m", "Beach - 200m"],
-      description: "Beautiful 2-bedroom apartment with city views and excellent amenities.",
-      landlord: {
-        name: "Mohammed Ali",
-        phone: "+971 50 345 6789",
-        whatsapp: "+971 50 345 6789",
-        rating: 4.5
-      },
-      amenities: ["Security", "Gym", "Pool", "Parking"],
-      availability: "Available Now",
-      emirate: "dubai"
-    },
-    // Abu Dhabi Properties
-    {
-      id: 4,
-      title: "Elegant 3BR Villa in Abu Dhabi with Garden",
-      location: "Abu Dhabi",
-      coordinates: { lat: 24.4539, lng: 54.3773 },
-      price: "AED 15,000",
-      period: "/month",
-      type: "villa",
-      beds: 3,
-      baths: 3,
-      area: "2,200 sq ft",
-      image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      images: [
-        "https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-      ],
-      features: ["Garden", "Private Parking", "Maid Room", "Storage"],
-      verified: true,
-      contact: "+971 50 456 7890",
-      nearbyPlaces: ["Mall - 1.5km", "School - 800m", "Hospital - 2km"],
-      description: "Spacious 3-bedroom villa with private garden in a quiet neighborhood.",
+      contact: "+968 9234 5678",
+      nearbyPlaces: ["Mall - 1.5km", "Hospital - 2km", "School - 1km"],
+      description: "Modern apartment with beautiful hills view in Muscat.",
       landlord: {
         name: "Fatima Al Zahra",
-        phone: "+971 50 456 7890",
-        whatsapp: "+971 50 456 7890",
-        rating: 4.6
+        phone: "+968 9234 5678",
+        whatsapp: "+968 9234 5678",
+        rating: 4.5
       },
-      amenities: ["Garden", "Parking", "Storage", "Security"],
+      amenities: ["Gym", "Pool", "Security", "Parking"],
       availability: "Available Now",
-      emirate: "abu-dhabi"
+      emirate: "muscat",
+      country: "oman"
     },
+    // Qatar Properties
     {
       id: 5,
-      title: "Luxury 2BR Apartment in Abu Dhabi Corniche",
-      location: "Abu Dhabi",
-      coordinates: { lat: 24.4795, lng: 54.3570 },
-      price: "AED 11,000",
+      title: "Luxury 2BR Apartment in West Bay, Doha",
+      location: "West Bay, Doha",
+      coordinates: { lat: 25.3548, lng: 51.5326 },
+      price: "QAR 8,000",
       period: "/month",
       type: "apartment",
       beds: 2,
       baths: 2,
       area: "1,300 sq ft",
-      image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      images: [
-        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-      ],
-      features: ["Sea View", "Furnished", "Gym", "Pool", "Parking"],
+      image: "https://images.unsplash.com/photo-1539650116574-75c0c6bbf914?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      images: ["https://images.unsplash.com/photo-1539650116574-75c0c6bbf914?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"],
+      features: ["City View", "Furnished", "Gym", "Pool", "Concierge"],
       verified: true,
-      contact: "+971 50 567 8901",
-      nearbyPlaces: ["Corniche - 100m", "Mall - 800m", "Marina - 500m"],
-      description: "Beautiful apartment with sea views on Abu Dhabi Corniche.",
+      contact: "+974 5123 4567",
+      nearbyPlaces: ["City Center Mall - 1km", "Corniche - 500m", "Metro - 800m"],
+      description: "Luxury apartment in the heart of Doha's West Bay district.",
       landlord: {
-        name: "Omar Hassan",
-        phone: "+971 50 567 8901",
-        whatsapp: "+971 50 567 8901",
-        rating: 4.8
+        name: "Mohammed Al Thani",
+        phone: "+974 5123 4567",
+        whatsapp: "+974 5123 4567",
+        rating: 4.9
       },
-      amenities: ["Sea View", "Gym", "Pool", "Parking", "Security"],
-      availability: "Available from July 15",
-      emirate: "abu-dhabi"
+      amenities: ["Concierge", "Gym", "Pool", "Valet Parking"],
+      availability: "Available Now",
+      emirate: "doha",
+      country: "qatar"
     },
-    // Ajman Properties
     {
       id: 6,
-      title: "Affordable 1BR Apartment in Ajman",
-      location: "Ajman",
-      coordinates: { lat: 25.4052, lng: 55.5136 },
-      price: "AED 3,500",
+      title: "Spacious Villa in Al Rayyan, Qatar",
+      location: "Al Rayyan",
+      coordinates: { lat: 25.2854, lng: 51.4240 },
+      price: "QAR 12,000",
+      period: "/month",
+      type: "villa",
+      beds: 5,
+      baths: 4,
+      area: "3,000 sq ft",
+      image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      images: ["https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"],
+      features: ["Private Garden", "Maid Room", "Driver Room", "Garage"],
+      verified: true,
+      contact: "+974 5234 5678",
+      nearbyPlaces: ["Mall of Qatar - 3km", "Education City - 5km", "Stadium - 2km"],
+      description: "Spacious family villa in prestigious Al Rayyan area.",
+      landlord: {
+        name: "Ali Al Kuwari",
+        phone: "+974 5234 5678",
+        whatsapp: "+974 5234 5678",
+        rating: 4.7
+      },
+      amenities: ["Private Garden", "Security", "Parking", "Storage"],
+      availability: "Available from July 20",
+      emirate: "al-rayyan",
+      country: "qatar"
+    },
+    // Saudi Arabia Properties
+    {
+      id: 7,
+      title: "Modern 3BR Apartment in Riyadh",
+      location: "Riyadh",
+      coordinates: { lat: 24.7136, lng: 46.6753 },
+      price: "SAR 3,500",
       period: "/month",
       type: "apartment",
-      beds: 1,
-      baths: 1,
-      area: "650 sq ft",
-      image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      images: [
-        "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-      ],
-      features: ["Semi-Furnished", "Parking", "Near Beach"],
+      beds: 3,
+      baths: 2,
+      area: "1,500 sq ft",
+      image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      images: ["https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"],
+      features: ["Modern Design", "City View", "Gym", "Pool"],
       verified: true,
-      contact: "+971 50 678 9012",
-      nearbyPlaces: ["Beach - 500m", "Mall - 1km", "Hospital - 1.5km"],
-      description: "Comfortable 1-bedroom apartment near Ajman beach.",
+      contact: "+966 5123 4567",
+      nearbyPlaces: ["Riyadh Gallery Mall - 2km", "King Fahd Road - 1km", "Metro - 500m"],
+      description: "Modern apartment in central Riyadh with excellent amenities.",
       landlord: {
-        name: "Ali Mahmoud",
-        phone: "+971 50 678 9012",
-        whatsapp: "+971 50 678 9012",
-        rating: 4.3
+        name: "Khalid Al Saud",
+        phone: "+966 5123 4567",
+        whatsapp: "+966 5123 4567",
+        rating: 4.6
       },
-      amenities: ["Parking", "Security", "Near Beach"],
+      amenities: ["Gym", "Pool", "Security", "Parking"],
       availability: "Available Now",
-      emirate: "ajman"
+      emirate: "riyadh",
+      country: "saudi-arabia"
+    },
+    {
+      id: 8,
+      title: "Luxury Villa in Jeddah with Sea View",
+      location: "Jeddah",
+      coordinates: { lat: 21.3099, lng: 39.1925 },
+      price: "SAR 8,000",
+      period: "/month",
+      type: "villa",
+      beds: 4,
+      baths: 3,
+      area: "2,800 sq ft",
+      image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      images: ["https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"],
+      features: ["Sea View", "Private Beach Access", "Garden", "Pool"],
+      verified: true,
+      contact: "+966 5234 5678",
+      nearbyPlaces: ["Red Sea Mall - 3km", "Corniche - 500m", "Airport - 20km"],
+      description: "Stunning villa with private beach access in Jeddah.",
+      landlord: {
+        name: "Omar Al Rashid",
+        phone: "+966 5234 5678",
+        whatsapp: "+966 5234 5678",
+        rating: 4.8
+      },
+      amenities: ["Sea View", "Private Beach", "Pool", "Garden"],
+      availability: "Available Now",
+      emirate: "jeddah",
+      country: "saudi-arabia"
+    },
+    // Bahrain Properties
+    {
+      id: 9,
+      title: "Waterfront 2BR Apartment in Manama",
+      location: "Manama",
+      coordinates: { lat: 26.2235, lng: 50.5876 },
+      price: "BHD 450",
+      period: "/month",
+      type: "apartment",
+      beds: 2,
+      baths: 2,
+      area: "1,100 sq ft",
+      image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      images: ["https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"],
+      features: ["Waterfront View", "Furnished", "Gym", "Pool"],
+      verified: true,
+      contact: "+973 3123 4567",
+      nearbyPlaces: ["Bahrain City Centre - 2km", "Financial District - 1km", "Marina - 300m"],
+      description: "Beautiful waterfront apartment in the heart of Manama.",
+      landlord: {
+        name: "Ahmed Al Khalifa",
+        phone: "+973 3123 4567",
+        whatsapp: "+973 3123 4567",
+        rating: 4.7
+      },
+      amenities: ["Waterfront View", "Gym", "Pool", "Security"],
+      availability: "Available Now",
+      emirate: "manama",
+      country: "bahrain"
+    },
+    {
+      id: 10,
+      title: "Modern Villa in Riffa, Bahrain",
+      location: "Riffa",
+      coordinates: { lat: 26.1300, lng: 50.5550 },
+      price: "BHD 800",
+      period: "/month",
+      type: "villa",
+      beds: 4,
+      baths: 3,
+      area: "2,200 sq ft",
+      image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      images: ["https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"],
+      features: ["Garden", "Modern Design", "Garage", "Security"],
+      verified: true,
+      contact: "+973 3234 5678",
+      nearbyPlaces: ["Riffa Views - 1km", "Golf Course - 2km", "School - 500m"],
+      description: "Modern family villa in the prestigious Riffa area.",
+      landlord: {
+        name: "Fatima Al Zayani",
+        phone: "+973 3234 5678",
+        whatsapp: "+973 3234 5678",
+        rating: 4.5
+      },
+      amenities: ["Garden", "Security", "Parking", "Modern Design"],
+      availability: "Available from Aug 1",
+      emirate: "riffa",
+      country: "bahrain"
     }
   ];
 
@@ -249,12 +363,28 @@ const PropertySearchResults = ({ searchCriteria }: { searchCriteria: SearchCrite
     
     // Filter properties based on search criteria
     let filteredProperties = allProperties.filter(property => {
-      // Location filter - check if property location contains search location
+      // Location filter - check if property location or country contains search location
       if (searchCriteria.location) {
         const searchLocation = searchCriteria.location.toLowerCase();
         const propertyLocation = property.location.toLowerCase();
-        if (!propertyLocation.includes(searchLocation) && searchLocation !== 'all locations') {
-          return false;
+        const propertyCountry = property.country.toLowerCase();
+        
+        // Check for country names
+        if (searchLocation.includes('oman') || searchLocation.includes('muscat')) {
+          if (propertyCountry !== 'oman') return false;
+        } else if (searchLocation.includes('qatar') || searchLocation.includes('doha')) {
+          if (propertyCountry !== 'qatar') return false;
+        } else if (searchLocation.includes('saudi') || searchLocation.includes('riyadh') || searchLocation.includes('jeddah')) {
+          if (propertyCountry !== 'saudi-arabia') return false;
+        } else if (searchLocation.includes('bahrain') || searchLocation.includes('manama')) {
+          if (propertyCountry !== 'bahrain') return false;
+        } else if (searchLocation.includes('dubai') || searchLocation.includes('uae') || searchLocation.includes('emirates')) {
+          if (propertyCountry !== 'uae') return false;
+        } else if (searchLocation !== 'all locations' && searchLocation.trim() !== '') {
+          // General location search
+          if (!propertyLocation.includes(searchLocation) && !propertyCountry.includes(searchLocation)) {
+            return false;
+          }
         }
       }
       
@@ -263,21 +393,21 @@ const PropertySearchResults = ({ searchCriteria }: { searchCriteria: SearchCrite
         return false;
       }
       
-      // Emirate filter - but allow properties from the location's emirate
-      if (searchCriteria.emirate && searchCriteria.emirate !== 'all') {
-        // If searching Dubai Marina but emirate is abu-dhabi, still show Dubai Marina properties
-        if (searchCriteria.location.toLowerCase().includes('dubai marina')) {
-          // Keep Dubai Marina properties regardless of emirate filter
-        } else if (property.emirate !== searchCriteria.emirate) {
-          return false;
-        }
-      }
-      
-      // Price range filter
+      // Price range filter (convert different currencies for comparison)
       if (searchCriteria.priceRange && searchCriteria.priceRange !== '') {
-        const propertyPrice = parseInt(property.price.replace(/\D/g, ''));
+        const propertyPriceStr = property.price.replace(/\D/g, '');
+        const propertyPrice = parseInt(propertyPriceStr);
         const [min, max] = searchCriteria.priceRange.split('-').map(p => parseInt(p.replace(/\D/g, '')));
-        if (propertyPrice < min || (max && propertyPrice > max)) {
+        
+        // Convert to USD for comparison (rough conversion)
+        let convertedPrice = propertyPrice;
+        if (property.price.includes('OMR')) convertedPrice *= 2.6;
+        else if (property.price.includes('QAR')) convertedPrice *= 0.27;
+        else if (property.price.includes('SAR')) convertedPrice *= 0.27;
+        else if (property.price.includes('BHD')) convertedPrice *= 2.65;
+        else if (property.price.includes('AED')) convertedPrice *= 0.27;
+        
+        if (convertedPrice < min || (max && convertedPrice > max)) {
           return false;
         }
       }
@@ -294,21 +424,27 @@ const PropertySearchResults = ({ searchCriteria }: { searchCriteria: SearchCrite
       return true;
     });
 
-    // Add distance calculation and sort by distance
+    // Set map center based on location
     if (searchCriteria.location) {
-      // Set map center based on location
-      if (searchCriteria.location.toLowerCase().includes('dubai marina')) {
+      const searchLoc = searchCriteria.location.toLowerCase();
+      if (searchLoc.includes('oman') || searchLoc.includes('muscat')) {
+        setMapCenter({ lat: 23.5880, lng: 58.3829 });
+      } else if (searchLoc.includes('qatar') || searchLoc.includes('doha')) {
+        setMapCenter({ lat: 25.3548, lng: 51.5326 });
+      } else if (searchLoc.includes('saudi') || searchLoc.includes('riyadh')) {
+        setMapCenter({ lat: 24.7136, lng: 46.6753 });
+      } else if (searchLoc.includes('jeddah')) {
+        setMapCenter({ lat: 21.3099, lng: 39.1925 });
+      } else if (searchLoc.includes('bahrain') || searchLoc.includes('manama')) {
+        setMapCenter({ lat: 26.2235, lng: 50.5876 });
+      } else if (searchLoc.includes('dubai') || searchLoc.includes('marina')) {
         setMapCenter({ lat: 25.0772, lng: 55.1392 });
-      } else if (searchCriteria.location.toLowerCase().includes('abu dhabi')) {
-        setMapCenter({ lat: 24.4539, lng: 54.3773 });
-      } else if (searchCriteria.location.toLowerCase().includes('ajman')) {
-        setMapCenter({ lat: 25.4052, lng: 55.5136 });
       }
 
       // Calculate distances from search center
       filteredProperties = filteredProperties.map(property => ({
         ...property,
-        distance: Math.random() * 3 + 0.2 // Mock distance calculation
+        distance: Math.random() * 5 + 0.5 // Mock distance calculation
       })).sort((a, b) => (a.distance || 0) - (b.distance || 0));
     }
 
@@ -342,7 +478,7 @@ const PropertySearchResults = ({ searchCriteria }: { searchCriteria: SearchCrite
             Search Results for "{searchCriteria.location || 'All Locations'}"
           </h1>
           <p className="text-gray-600">
-            Found {properties.length} properties matching your criteria
+            Found {properties.length} properties matching your criteria across GCC countries
           </p>
         </div>
 
@@ -400,8 +536,11 @@ const PropertySearchResults = ({ searchCriteria }: { searchCriteria: SearchCrite
                     <span className="bg-blue-800 text-white px-2 py-1 rounded-full text-xs font-medium">
                       {property.type.charAt(0).toUpperCase() + property.type.slice(1)}
                     </span>
+                    <span className="bg-green-600 text-white px-2 py-1 rounded-full text-xs">
+                      {property.country.toUpperCase()}
+                    </span>
                     {property.distance && (
-                      <span className="bg-green-600 text-white px-2 py-1 rounded-full text-xs">
+                      <span className="bg-orange-600 text-white px-2 py-1 rounded-full text-xs">
                         {property.distance.toFixed(1)}km away
                       </span>
                     )}
@@ -533,7 +672,7 @@ const PropertySearchResults = ({ searchCriteria }: { searchCriteria: SearchCrite
           <div className="text-center py-12">
             <MapPin className="h-16 w-16 text-gray-300 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">No Properties Found</h3>
-            <p className="text-gray-600">Try adjusting your search criteria to find more properties.</p>
+            <p className="text-gray-600">Try searching for Dubai, Oman, Qatar, Saudi Arabia, or Bahrain to find properties.</p>
           </div>
         )}
       </div>
