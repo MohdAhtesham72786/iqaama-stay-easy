@@ -1,8 +1,9 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { MapPin, Navigation, Phone, MessageCircle } from 'lucide-react';
-import { Button } from './ui/button';
-import { Card } from './ui/card';
+import { createPropertyMarker } from './map/PropertyMarker';
+import MapInfoCard from './map/MapInfoCard';
+import MapLoadingSpinner from './map/MapLoadingSpinner';
+import MapControls from './map/MapControls';
 
 interface Property {
   id: number;
@@ -126,40 +127,15 @@ const GoogleMapComponent = ({ properties, onPropertySelect, center }: GoogleMapC
     }
 
     // Add markers for each property
-    properties.forEach((property, index) => {
-      try {
-        console.log(`Creating marker for property ${property.id}:`, property.title, property.coordinates);
-        
-        const marker = new window.google.maps.Marker({
-          position: property.coordinates,
-          map: mapInstanceRef.current,
-          title: property.title,
-          icon: {
-            url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
-              <svg width="40" height="50" viewBox="0 0 40 50" xmlns="http://www.w3.org/2000/svg">
-                <g>
-                  <path d="M20 0C8.95 0 0 8.95 0 20c0 15 20 30 20 30s20-15 20-30C40 8.95 31.05 0 20 0z" fill="#1e40af"/>
-                  <circle cx="20" cy="20" r="8" fill="white"/>
-                  <text x="20" y="25" text-anchor="middle" fill="#1e40af" font-size="8" font-weight="bold">${property.price.split(' ')[1] || 'N/A'}</text>
-                </g>
-              </svg>
-            `),
-            scaledSize: new window.google.maps.Size(40, 50),
-            anchor: new window.google.maps.Point(20, 50)
-          }
-        });
+    properties.forEach((property) => {
+      const marker = createPropertyMarker({
+        property,
+        map: mapInstanceRef.current,
+        onMarkerClick: handleMarkerClick
+      });
 
-        // Add click listener
-        marker.addListener('click', () => {
-          console.log('Marker clicked for property:', property.title);
-          setSelectedProperty(property);
-          mapInstanceRef.current?.panTo(property.coordinates);
-        });
-
+      if (marker) {
         markersRef.current.push(marker);
-        console.log(`Marker created successfully for property ${property.id}`);
-      } catch (error) {
-        console.error('Error creating marker for property:', property.id, error);
       }
     });
 
@@ -189,7 +165,7 @@ const GoogleMapComponent = ({ properties, onPropertySelect, center }: GoogleMapC
     }
   }, [properties, isLoaded]);
 
-  const handlePropertyClick = (property: Property) => {
+  const handleMarkerClick = (property: Property) => {
     setSelectedProperty(property);
     if (mapInstanceRef.current) {
       mapInstanceRef.current.panTo(property.coordinates);
@@ -197,14 +173,7 @@ const GoogleMapComponent = ({ properties, onPropertySelect, center }: GoogleMapC
   };
 
   if (!isLoaded) {
-    return (
-      <div className="relative h-96 lg:h-[500px] rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading Google Maps...</p>
-        </div>
-      </div>
-    );
+    return <MapLoadingSpinner />;
   }
 
   return (
@@ -212,63 +181,15 @@ const GoogleMapComponent = ({ properties, onPropertySelect, center }: GoogleMapC
       {/* Google Map Container */}
       <div ref={mapRef} className="absolute inset-0" />
 
-      {/* Map Info */}
-      <div className="absolute bottom-4 right-4 bg-white/90 px-3 py-2 rounded text-xs z-10">
-        <div className="flex items-center gap-2">
-          <Navigation className="h-3 w-3" />
-          <span>{properties.length} properties in this area</span>
-        </div>
-      </div>
+      {/* Map Controls */}
+      <MapControls propertyCount={properties.length} />
 
       {/* Selected Property Info Card */}
       {selectedProperty && (
-        <Card className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-80 z-30 shadow-xl">
-          <div className="p-4">
-            <div className="flex gap-3">
-              <img
-                src={selectedProperty.image}
-                alt={selectedProperty.title}
-                className="w-16 h-16 object-cover rounded"
-              />
-              <div className="flex-1">
-                <h4 className="font-semibold text-sm mb-1 line-clamp-2">
-                  {selectedProperty.title}
-                </h4>
-                <div className="flex items-center text-gray-600 mb-1">
-                  <MapPin className="h-3 w-3 mr-1" />
-                  <span className="text-xs">{selectedProperty.location}</span>
-                </div>
-                <div className="text-blue-800 font-bold">
-                  {selectedProperty.price}
-                  <span className="text-xs font-normal text-gray-600">{selectedProperty.period}</span>
-                </div>
-              </div>
-            </div>
-            <div className="flex gap-2 mt-3">
-              <Button 
-                size="sm" 
-                className="flex-1 bg-blue-800 hover:bg-blue-900"
-                onClick={() => onPropertySelect(selectedProperty)}
-              >
-                View Details
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => window.open(`https://wa.me/${selectedProperty.landlord.whatsapp}`, '_blank')}
-              >
-                <MessageCircle className="h-4 w-4" />
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => window.open(`tel:${selectedProperty.landlord.phone}`, '_self')}
-              >
-                <Phone className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </Card>
+        <MapInfoCard 
+          property={selectedProperty}
+          onPropertySelect={onPropertySelect}
+        />
       )}
     </div>
   );
